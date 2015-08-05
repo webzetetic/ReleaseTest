@@ -23,8 +23,9 @@ If new version is 15.2.2.xx:
 3. Test Conversion from Enterprise to Ultimate (using system from 2b)
 */
 
+var util = require('util');
 var webdriverio = require('webdriverio');
-var options = { desiredCapabilities: { browserName: 'firefox' } };
+var options = { desiredCapabilities: { browserName: 'firefox'}, waitforTimeout:5000 };
 var client = webdriverio.remote(options);
 client.addCommand('setCheckbox',function(selector,state){
 	return this.isSelected(selector).then(function(isSelected){
@@ -48,23 +49,31 @@ return this.click('=Create New Enterprise')
 }) 
 client
     .init()
-   /* .url('http://hostess')
+	.url('http://hostess')
 	.newEnterpriseRelease({
-		name:'Tom0803-151',
+		name:'Tom0805-151',
 		release:'15.1',
-		sampledata:true
-	})*/
-	.url('https://staging.v1host.com/Tom0803-151/')
-	//setInterval(function() {client.isExisting('#member_password').then(clearInterval()).refresh()}, 3000);
-	setInterval(function() {client.isExisting('#member_password').then(clearInterval(); client.refresh())}, 3000);
-	client
+		sampledata:false
+	}) 
+	
+	.url('http://hostess/Instance/Detail/220107')
+		.waitUntil(function () {
+		return this.pause(1000).getText(".ui-row-ltr td:nth-child(6)").then(function(text) {
+		var t = util.isArray(text) ? text[0]:text
+		console.log(t)
+		return t === 'Completed'
+ });
+		})
+	
+	
+/*client
 	/*Uncomment this block if user/pw already set */
 	/*.setValue('[name=username]', 'admin')
     .setValue('[name=password]', 'admin')
     .submitForm("#login-form")
 	*/
 	
-	.setValue('#member_password','admin')
+	/*.setValue('#member_password','admin')
 	.setValue('#member_password_confirmation','admin')
 	.click('#continue')
 	.click('#apply')
@@ -72,7 +81,7 @@ client
 	
 	.click('[title="Play with a sample backlog"]')
 	
-	.click('fsdfsfsfs')
+
     /* .url('http://hostess')
 	.newEnterpriseRelease({
 		name:'Tom0731-150',
